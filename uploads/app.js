@@ -23,7 +23,7 @@ var apis = require('./routes/apis');
 // Default route handler
 app.use('/', apis); 
 
-var currFileName = '';
+var currFileName = 'haha';
 // File Upload location and properties
 var storage = multer.diskStorage({
 				destination: function (req, file, cb) {

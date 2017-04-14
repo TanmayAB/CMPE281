@@ -8,6 +8,11 @@ var path = require('path');
 var multer  = require('multer');
 var upload = multer();
 
+// Filesystem, unzip and child process
+var fs = require('fs');
+var unzip = require('unzip');
+var exec = require('child_process').exec;
+
 //body parser for getting body of requests
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
@@ -16,14 +21,10 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 // Setting up directories
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'public')));
+var express = require('express');
+var draw = require('./draw');
 
-// Different APIs :
-var apis = require('./routes/apis');
-
-// Default route handler
-app.use('/', apis); 
-
-var currFileName = '';
+var currFileName = 'haha';
 // File Upload location and properties
 var storage = multer.diskStorage({
 				destination: function (req, file, cb) {
@@ -38,6 +39,12 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 var uploadProfileImgs = upload.single('file');
+
+// For sending a index.html
+app.get('/',function(req,res){
+		res.render('index');
+		res.end();
+	});
 
 //For Storing uploaded file and sending response
 app.post('/uploadFile', function (req, res) {
@@ -60,6 +67,23 @@ app.post('/uploadFile', function (req, res) {
 	    res.end();
 	});
 });
+
+//For extracting zip and generating diagram
+app.post('/generateDiagram',function(req,res){
+
+
+		var filePath = __dirname + '/uploads/' + currFileName;
+		fs.createReadStream(filePath).pipe(unzip.Extract({ path: './extracted' }));
+
+
+		console.log('calling getClassDiagram');
+		draw.getClassDiagram(function(result){
+			
+			console.log('Inside callback  of getClassDiagram');
+			console.log('Sending result');
+			res.send(result);
+			res.end();
+		});	
 
 
 // Setting PORT
