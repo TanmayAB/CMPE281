@@ -22,17 +22,16 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'public')));
 var express = require('express');
-var draw = require('./draw');
 
 var currFileName = 'haha';
 // File Upload location and properties
 var storage = multer.diskStorage({
 				destination: function (req, file, cb) {
-					console.log('arrived in destination');
+					//console.log('arrived in destination');
 					cb(null, __dirname + '/uploads');
 				},
 				filename: function (req, file, cb) {
-					console.log('arrived in filename');
+					//console.log('arrived in filename');
 					cb(null, file.originalname	) //Appending .jp
 				}
 			});
@@ -50,7 +49,7 @@ app.get('/',function(req,res){
 app.post('/uploadFile', function (req, res) {
   	uploadProfileImgs(req, res, function (err) {
 	    if (err) {
-	    	console.log(err.message);
+	    	//console.log(err.message);
 	    	// An error occurred when uploading
 	    	response = {};
 	    	response.status = '400';
@@ -58,9 +57,11 @@ app.post('/uploadFile', function (req, res) {
 	    	res.send(response);
 	    	res.end();
 	    }
-	    console.log('Everything went fine');
+	    //console.log('Everything went fine');
 	    response = {};
-	    currFileName = req.file.originalname;
+	    global.currFileName = req.file.originalname;
+	    //console.log('file in upload file : ');
+	    //console.log(global.currFileName);
 	    response.status = '200';
 	    response.message="File Uploaded successfully";
 	    res.send(response);
@@ -72,18 +73,29 @@ app.post('/uploadFile', function (req, res) {
 app.post('/generateDiagram',function(req,res){
 
 
-		var filePath = __dirname + '/uploads/' + currFileName;
+		var filePath = __dirname + '/uploads/' + global.currFileName;
 		fs.createReadStream(filePath).pipe(unzip.Extract({ path: './extracted' }));
+		//console.log('file in generate diagram : ');
+	    //console.log(global.currFileName);
+	    
+		var arr = global.currFileName.split(".");
+		var dir = arr[0];
+		//console.log('dir' + dir);
+		var dirPath = "./extracted/"+dir+"";
 
-
-		console.log('calling getClassDiagram');
-		draw.getClassDiagram(function(result){
-			
-			console.log('Inside callback  of getClassDiagram');
-			console.log('Sending result');
-			res.send(result);
+		var compileQuery = "java -jar umlparser.jar "+dirPath+" finalpic";
+		
+		exec(compileQuery, function(error, stdout, stderr) {
+			//console.log('inside exec');
+			//console.log(error);
+			response = {};
+			response.status = '200';
+			response.message = 'diagram generated successfully';
+			//console.log('Sending result');
+			res.send(response);
 			res.end();
-		});	
+		});
+});	
 
 
 // Setting PORT
@@ -105,4 +117,4 @@ var server = app.listen(app.get('port'), function() {
 });
 
 //Exporting module
-module.exports = {app,currFileName};
+//module.exports = {app,currFileName};

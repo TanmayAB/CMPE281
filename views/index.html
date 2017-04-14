@@ -21,7 +21,7 @@
 
 			<form ng-controller="MyCtrl" name="form">
 				<br><br>
-				<button class="button" ngf-select ng-model="file" name="file" ngf-max-size="20MB">Select</button>
+				<button class="button" ngf-select ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select</button>
 				<br><br>
 					<button type="submit" ng-click="submit()">submit</button>
 				</div>
