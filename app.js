@@ -8,8 +8,8 @@ var path = require('path');
 var multer  = require('multer');
 var upload = multer();
 
-var cors = require('cors');
 
+var cors = require('cors');
 // Filesystem, unzip and child process
 var fs = require('fs');
 var unzip = require('unzip');
@@ -21,11 +21,11 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use(cors());
-
 // Setting up directories
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'public')));
 var express = require('express');
+
 
 var currFileName = 'haha';
 // File Upload location and properties
@@ -90,20 +90,48 @@ app.post('/generateDiagram',function(req,res){
 		var compileQuery = "java -jar umlparser.jar "+dirPath+" finalpic";
 		
 		exec(compileQuery, function(error, stdout, stderr) {
-			//console.log('inside exec');
-			//console.log(error);
-			response = {};
-			response.status = '200';
-			response.message = 'diagram generated successfully';
-			//console.log('Sending result');
-			res.send(response);
-			res.end();
+			if(error)
+			{
+				console.log('error in JAVA command');
+				response = {};
+				response.status = '400';
+				response.message = 'Diagram NOT generated';
+				//console.log('Sending result');
+				res.send(response);
+				res.end();				
+			}	
+			else
+			{
+				fs.rename('./finalpic.png','./public/finalpic.png',function(error){
+					if(error)
+					{
+
+						console.log('error in RENAMING');
+						response = {};
+						response.status = '400';
+						response.message = 'Diagram NO;T generated';
+						//console.log('Sending result');
+						res.send(response);
+						res.end();							
+					}
+					else
+					{
+						console.log('PNG now acceccible from public');
+						response = {};
+						response.status = '200';
+						response.message = 'diagram generated successfully';
+						//console.log('Sending result');
+						res.send(response);
+						res.end();
+					}
+				});
+			}
 		});
 });	
 
 
 // Setting PORT
-app.set('port', process.env.PORT || 3000); 
+app.set('port', process.env.PORT || 3001); 
 
 // Setting up default error handler
 app.use(function (req, res, next) {
