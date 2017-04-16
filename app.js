@@ -8,6 +8,8 @@ var path = require('path');
 var multer  = require('multer');
 var upload = multer();
 
+var cors = require('cors');
+
 // Filesystem, unzip and child process
 var fs = require('fs');
 var unzip = require('unzip');
@@ -17,6 +19,8 @@ var exec = require('child_process').exec;
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+app.use(cors());
 
 // Setting up directories
 app.use(express.static(path.join(__dirname, 'views')));
