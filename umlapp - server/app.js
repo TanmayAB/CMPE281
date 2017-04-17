@@ -51,26 +51,38 @@ app.get('/',function(req,res){
 
 //For Storing uploaded file and sending response
 app.post('/uploadFile', function (req, res) {
-  	uploadProfileImgs(req, res, function (err) {
-	    if (err) {
-	    	//console.log(err.message);
-	    	// An error occurred when uploading
-	    	response = {};
-	    	response.status = '400';
-	    	response.message="Something went wrong.! Please try again Later.";
-	    	res.send(response);
-	    	res.end();
-	    }
-	    //console.log('Everything went fine');
-	    response = {};
-	    global.currFileName = req.file.originalname;
-	    //console.log('file in upload file : ');
-	    //console.log(global.currFileName);
-	    response.status = '200';
-	    response.message="File Uploaded successfully";
-	    res.send(response);
-	    res.end();
-	});
+	console.log('request : ');
+	//console.log(req);
+	console.log(req);
+
+	if(req.body != null)
+	{
+		console.log(req.body);
+	}
+	else
+	{
+	  	uploadProfileImgs(req, res, function (err) {
+		    if (err) {
+		    	//console.log(err.message);
+		    	// An error occurred when uploading
+		    	response = {};
+		    	response.status = '400';
+		    	response.message="Something went wrong.! Please try again Later.";
+		    	res.send(response);
+		    	res.end();
+		    }
+		    //console.log('Everything went fine');
+		    response = {};
+		    console.log(req.file);
+		    global.currFileName = req.file.originalname;
+		    //console.log('file in upload file : ');
+		    //console.log(global.currFileName);
+		    response.status = '200';
+		    response.message="File Uploaded successfully";
+		    res.send(response);
+		    res.end();
+		});
+  	}
 });
 
 //For extracting zip and generating diagram
