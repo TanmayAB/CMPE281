@@ -51,16 +51,14 @@ app.get('/',function(req,res){
 
 //For Storing uploaded file and sending response
 app.post('/uploadFile', function (req, res) {
-	console.log('request : ');
-	//console.log(req);
-	console.log(req);
-
-	if(req.body != null)
-	{
-		console.log(req.body);
+	if(req.body && req.body.javaCode) {
+		console.log(req.body.javaCode);
+			response.status = '200';
+		    response.message="JAVACODE received successfully";
+		    res.send(response);
+		    res.end();
 	}
-	else
-	{
+	else{
 	  	uploadProfileImgs(req, res, function (err) {
 		    if (err) {
 		    	//console.log(err.message);
@@ -87,8 +85,6 @@ app.post('/uploadFile', function (req, res) {
 
 //For extracting zip and generating diagram
 app.post('/generateDiagram',function(req,res){
-
-
 		var filePath = __dirname + '/uploads/' + global.currFileName;
 		fs.createReadStream(filePath).pipe(unzip.Extract({ path: './extracted' }));
 		//console.log('file in generate diagram : ');
