@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var express = require('express');
 
 
+var format = '';
 var currFileName = 'haha';
 // File Upload location and properties
 var storage = multer.diskStorage({
@@ -36,7 +37,7 @@ var storage = multer.diskStorage({
 				},
 				filename: function (req, file, cb) {
 					//console.log('arrived in filename');
-					cb(null, file.originalname	) //Appending .jp
+					cb(null, file.originalname) //Appending .jp
 				}
 			});
 
@@ -53,30 +54,52 @@ app.get('/',function(req,res){
 app.post('/uploadFile', function (req, res) {
 	if(req.body && req.body.javaCode) {
 		console.log(req.body.javaCode);
-			response.status = '200';
-		    response.message="JAVACODE received successfully";
-		    res.send(response);
-		    res.end();
+
+
+		var dirPath = "./extracted";
+
+
+		fs.writeFile("./extracted/A.java", req.body.javaCode, function(err) {
+
+    		response = {};
+
+    		if(err) {
+        		console.log(err);
+        		response.status = '400';
+	    		response.message="Unable to save file (JAVACODE)";
+    		}
+    		else {
+
+    			global.format = "text";
+
+	    		console.log("The file was saved!");
+				response = {};
+				response.status = '200';
+		    	response.message="JAVACODE received successfully";
+	    	}
+	    	res.send(response);
+	    	res.end();
+		});
 	}
 	else{
+
+		response = {};
 	  	uploadProfileImgs(req, res, function (err) {
 		    if (err) {
-		    	//console.log(err.message);
-		    	// An error occurred when uploading
-		    	response = {};
+		    	console.log(err);
+
 		    	response.status = '400';
 		    	response.message="Something went wrong.! Please try again Later.";
-		    	res.send(response);
-		    	res.end();
 		    }
-		    //console.log('Everything went fine');
-		    response = {};
-		    console.log(req.file);
-		    global.currFileName = req.file.originalname;
-		    //console.log('file in upload file : ');
-		    //console.log(global.currFileName);
-		    response.status = '200';
-		    response.message="File Uploaded successfully";
+		    else{
+
+		    	global.format = "zip";
+
+		    	console.log(req.file);
+			    global.currFileName = req.file.originalname;
+			    response.status = '200';
+			    response.message="File Uploaded successfully";
+			}
 		    res.send(response);
 		    res.end();
 		});
@@ -85,61 +108,109 @@ app.post('/uploadFile', function (req, res) {
 
 //For extracting zip and generating diagram
 app.post('/generateDiagram',function(req,res){
+
+
+		if(global.format === "text"){
+			//var compileQuery = "umlgraph "+dirPath+"/A png ";
+			var compileQuery="umlgraph ./extracted/A png";
+
+			exec(compileQuery, function(error, stdout, stderr) {
+
+				if(error)
+				{
+					console.log('error in JAVA command');
+					response = {};
+					response.status = '400';
+					response.message = 'Diagram NOT generated';
+					//console.log('Sending result');
+					res.send(response);
+					res.end();
+				}
+				else
+				{
+					fs.rename('./extracted/A.png','./public/finalpic.png',function(error){
+						if(error)
+						{
+
+							console.log('error in RENAMING');
+							response = {};
+							response.status = '400';
+							response.message = 'Unable to move file';
+							//console.log('Sending result');
+							res.send(response);
+							res.end();
+						}
+						else
+						{
+							console.log('PNG now accessible from public');
+							response = {};
+							response.status = '200';
+							response.message = 'diagram generated successfully from JAVACODE';
+							//console.log('Sending result');
+							res.send(response);
+							res.end();
+						}
+					});
+				}
+			});
+		}
+		else if(global.format === "zip"){
 		var filePath = __dirname + '/uploads/' + global.currFileName;
 		fs.createReadStream(filePath).pipe(unzip.Extract({ path: './extracted' }));
 		//console.log('file in generate diagram : ');
 	    //console.log(global.currFileName);
-	    
+
 		var arr = global.currFileName.split(".");
 		var dir = arr[0];
 		//console.log('dir' + dir);
 		var dirPath = "./extracted/"+dir+"";
 
 		var compileQuery = "java -jar umlparser.jar "+dirPath+" finalpic";
-		
-		exec(compileQuery, function(error, stdout, stderr) {
-			if(error)
-			{
-				console.log('error in JAVA command');
-				response = {};
-				response.status = '400';
-				response.message = 'Diagram NOT generated';
-				//console.log('Sending result');
-				res.send(response);
-				res.end();				
-			}	
-			else
-			{
-				fs.rename('./finalpic.png','./public/finalpic.png',function(error){
-					if(error)
-					{
 
-						console.log('error in RENAMING');
-						response = {};
-						response.status = '400';
-						response.message = 'Diagram NO;T generated';
-						//console.log('Sending result');
-						res.send(response);
-						res.end();							
-					}
-					else
-					{
-						console.log('PNG now acceccible from public');
-						response = {};
-						response.status = '200';
-						response.message = 'diagram generated successfully';
-						//console.log('Sending result');
-						res.send(response);
-						res.end();
-					}
-				});
-			}
-		});
-});	
+			exec(compileQuery, function(error, stdout, stderr) {
+				if(error)
+				{
+					console.log('error in JAVA command');
+					response = {};
+					response.status = '400';
+					response.message = 'Diagram NOT generated';
+					//console.log('Sending result');
+					res.send(response);
+					res.end();
+				}
+				else
+				{
+					fs.rename('./finalpic.png','./public/finalpic.png',function(error){
+						if(error)
+						{
+
+							console.log('error in RENAMING');
+							response = {};
+							response.status = '400';
+							response.message = 'Diagram NO;T generated';
+							//console.log('Sending result');
+							res.send(response);
+							res.end();
+						}
+						else
+						{
+							console.log('PNG now accessible from public');
+							response = {};
+							response.status = '200';
+							response.message = 'diagram generated successfully from ZIP file';
+							//console.log('Sending result');
+							res.send(response);
+							res.end();
+						}
+					});
+				}
+			});
+		}
+});
 
 
 // Setting PORT
-app.set('port', process.env.PORT || 3001); 
+app.set('port', process.env.PORT || 3001);
 
 // Setting up default error handler
 app.use(function (req, res, next) {
