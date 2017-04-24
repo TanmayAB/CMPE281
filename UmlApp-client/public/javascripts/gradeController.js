@@ -16,10 +16,17 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 	$scope.file = null;
 	$scope.diagram = null;
 
-	$scope.tenant1 = false;
-	$scope.tenant2 = false;
-	$scope.tenant3 = false;
-	$scope.tenant4 = false;
+
+	$scope.tenant1 = {};
+	$scope.tenant2 = {};
+	$scope.tenant3 = {};
+	$scope.tenant4 = {};
+
+	$scope.tenant1.display = false;
+	$scope.tenant2.display = false;
+	$scope.tenant3.display = false;
+	$scope.tenant4.display = false;
+
 	$scope.isDiagramGenerated = false;
 	$scope.grades = [
 		{grade : "A"},
@@ -54,10 +61,10 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 			$scope.isTenantSelected = true;
 		}
 
-		$scope.tenant1 = false;
-		$scope.tenant2 = false;
-		$scope.tenant3 = false;
-		$scope.tenant4 = false;
+		$scope.tenant1.display = false;
+		$scope.tenant2.display = false;
+		$scope.tenant3.display = false;
+		$scope.tenant4.display = false;
 		$scope.diagram=null;
 		$scope.isDiagramGenerated = false;
 
@@ -82,35 +89,35 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 				console.log($scope.tenants);
 
 		  		if($scope.selectedTenant === "t001"){
-		  			$scope.tenant1 = true;
-					$scope.tenant2 = false;
-					$scope.tenant3 = false;
-					$scope.tenant4 = false;
+		  			$scope.tenant1.display = true;
+					$scope.tenant2.display = false;
+					$scope.tenant3.display = false;
+					$scope.tenant4.display = false;
 
 					console.log('It\'s tenant 1');
 		  		}
 
 		  		else if($scope.selectedTenant === "t002"){
-		  			$scope.tenant1 = false;
-					$scope.tenant2 = true;
-					$scope.tenant3 = false;
-					$scope.tenant4 = false;
+		  			$scope.tenant1.display = false;
+					$scope.tenant2.display = true;
+					$scope.tenant3.display = false;
+					$scope.tenant4.display = false;
 
 					console.log('It\'s tenant 2');
 		  		}
 		  		else if($scope.selectedTenant === "t003"){
-		  			$scope.tenant1 = false;
-					$scope.tenant2 = false;
-					$scope.tenant3 = true;
-					$scope.tenant4 = false;
+		  			$scope.tenant1.display = false;
+					$scope.tenant2.display = false;
+					$scope.tenant3.display = true;
+					$scope.tenant4.display = false;
 
 					console.log('It\'s tenant 3');
 		  		}
 		  		else if($scope.selectedTenant === "t004"){
-		  			$scope.tenant1 = false;
-					$scope.tenant2 = false;
-					$scope.tenant3 = false;
-					$scope.tenant4 = true;
+		  			$scope.tenant1.display = false;
+					$scope.tenant2.display = false;
+					$scope.tenant3.display = false;
+					$scope.tenant4.display = true;
 
 					console.log('It\'s tenant 4');
 		  		}

@@ -7,77 +7,95 @@
     </div>
 	<div class="row">
 			<center>
+				<label>
+					Select Tenant :
+				</label>
 				<select ng-model="selectedTenant" ng-change="display()">
 					<option ng-repeat="t in tenants" value="{{t.tenant}}">{{t.tenant}}</option>
 				</select>
 			</center>
+			<br>
 	</div>
 	<div ng-show="isTenantSelected">
 		<form name="uploadForm" ng-submit="submit()">
-			<div class="row" ng-show="isZip" >
+			<div class="row" ng-show="isZip">
 					<center>
-						<button type="button" class="btn" ngf-select ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select</button>
+						<button type="button" class="btn" ngf-select ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select File</button>
 					</center>
+					<br>
 			</div>
 
-			<div class="row" ng-show="isText">
+			<div class="row top-buffer" ng-show="isText">
 					<center>
 						<textarea placeholder="Past JAVA code here..." ng-model="javaCode"  rows="10" cols ="70" maxlength="500000">
 						</textarea>
 					</center>
+					<br>
 			</div>
 
 			<div class="row">
 					<center>
 						<button type="submit">Submit</button>
 					</center>
+					<br>
 			</div>
 			 <div class="alert alert-danger" ng-show="isIncomplete">
                 <strong>Upload a File </strong> or <strong>Paste JAVA code</strong> first.
              </div>
 		</form>
-		<div class="row" margin-top="10em">
+		<div class="row  top-buffer" margin-top="10em">
 				<center>
 					<input type="button" ng-click="generateDiagram()" value="Generate Class Diagram" class="btn btn-primary"/>
 				</center>
+				<br>
 		</div>
-		<div class="row">
-			<center>
-				<img ng-src={{diagram}} ng-show="isDiagramGenerated"/>
-			</center>
-		</div>
-		<div class="row" ng-show="tenant1">
-			<center>
-				<select ng-model="grades">
-					<option ng-repeat="g in grades" value="{{g.grade}}">{{g.grade}}</option>
-				</select>
-			</center>
-		</div>
-		<div class="row" ng-show="tenant2">
-			<center>
-				Marks : <input type="text" placeholder="percentage"> in %<br>
-				<textarea placeholder="Remarks..." ng-model="remarks"  rows="3" cols ="50" maxlength="500000">
-				</textarea>
-			</center>
-		</div>
-		<div class="row" ng-show="tenant3">
-			<center>
-				<select ng-model="scores">
-					<option ng-repeat="s in scores" value="{{s.score}}">{{s.score}}</option>
-				</select>
-			</center>
-		</div>
-		<div class="row" ng-show="tenant4">
-			<center>
-				<label>
-					<input type="radio" ng-model="status" value="complete">
-				    Complete
-				  	</label><br/>
-				<label>
-				    <input type="radio" ng-model="status" value="incomplete">
-				    Incomplete
-				</label><br/>
-			</center>
+		<div class="col-md-6 col-md-offset-2" ng-show="isDiagramGenerated">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+					<div class="row top-buffer">
+						<center>
+							<img ng-src={{diagram}}>
+						</center>
+						<br>
+					</div>
+					<div class="row" ng-show="tenant1.display">
+						<center>
+							<select ng-model="tenant1.grade">
+								<option ng-repeat="g in grades" value="{{g.grade}}">{{g.grade}}</option>
+							</select>
+						</center>
+						<br>
+					</div>
+					<div class="row" ng-show="tenant2.display">
+						<center>
+							Marks : <input type="text" placeholder="percentage" ng-model="tenant2.percentage"> in %<br><br>
+							<textarea placeholder="Remarks..." ng-model="tenant2.remarks"  rows="3" cols ="50" maxlength="500000">
+							</textarea>
+						</center>
+						<br>
+					</div>
+					<div class="row" ng-show="tenant3.display">
+						<center>
+							<select ng-model="tenant3.score">
+								<option ng-repeat="s in scores" value="{{s.score}}">{{s.score}}</option>
+							</select>
+						</center>
+						<br>
+					</div>
+					<div class="row" ng-show="tenant4.display">
+						<center>
+							<label>
+								<input type="radio" ng-model="tenant4.status" value="complete">
+							    Complete
+							</label><br/>
+							<label>
+							    <input type="radio" ng-model="tenant4.status" value="incomplete">
+							    Incomplete
+							</label><br/>
+						</center>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
