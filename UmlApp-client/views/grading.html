@@ -16,8 +16,9 @@
 			</center>
 			<br>
 	</div>
+
 	<div ng-show="isTenantSelected">
-		<form name="uploadForm" ng-submit="submit()">
+		<form name="uploadForm" ng-submit="submit()" class="form-group">
 			<div class="row" ng-show="isZip">
 					<center>
 						<button type="button" class="btn" ngf-select ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select File</button>
@@ -27,7 +28,7 @@
 
 			<div class="row top-buffer" ng-show="isText">
 					<center>
-						<textarea placeholder="Past JAVA code here..." ng-model="javaCode"  rows="10" cols ="70" maxlength="500000">
+						<textarea class="form-control" placeholder="Past JAVA code here..." ng-model="javaCode"  rows="10" cols ="70" maxlength="500000">
 						</textarea>
 					</center>
 					<br>
@@ -49,50 +50,58 @@
 				</center>
 				<br>
 		</div>
-		<div class="col-md-6 col-md-offset-2" ng-show="isDiagramGenerated">
+		<div class="col-md-8 col-md-offset-2" >
             <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-					<div class="row top-buffer">
-						<center>
-							<img ng-src={{diagram}}>
-						</center>
-						<br>
+                <div class="panel-heading clearfix" ng-show="isRequestSent">
+                	<hr>
+                	<div id="myProgress">
+  						<div id="myBar" >10%</div>
 					</div>
-					<div class="row" ng-show="tenant1.display">
-						<center>
-							<select ng-model="tenant1.grade">
-								<option ng-repeat="g in grades" value="{{g.grade}}">{{g.grade}}</option>
-							</select>
-						</center>
-						<br>
-					</div>
-					<div class="row" ng-show="tenant2.display">
-						<center>
-							Marks : <input type="text" placeholder="percentage" ng-model="tenant2.percentage"> in %<br><br>
-							<textarea placeholder="Remarks..." ng-model="tenant2.remarks"  rows="3" cols ="50" maxlength="500000">
-							</textarea>
-						</center>
-						<br>
-					</div>
-					<div class="row" ng-show="tenant3.display">
-						<center>
-							<select ng-model="tenant3.score">
-								<option ng-repeat="s in scores" value="{{s.score}}">{{s.score}}</option>
-							</select>
-						</center>
-						<br>
-					</div>
-					<div class="row" ng-show="tenant4.display">
-						<center>
-							<label>
-								<input type="radio" ng-model="tenant4.status" value="complete">
-							    Complete
-							</label><br/>
-							<label>
-							    <input type="radio" ng-model="tenant4.status" value="incomplete">
-							    Incomplete
-							</label><br/>
-						</center>
+					<div ng-show="isDiagramGenerated">
+						<div class="row top-buffer">
+							<center>
+								<img ng-src={{diagram}}>
+							</center>
+							<br>
+						</div>
+						<div class="form-group">
+							<div class="row" ng-show="tenant1.display">
+								<center>
+									<select ng-model="tenant1.grade">
+										<option ng-repeat="g in grades" value="{{g.grade}}">{{g.grade}}</option>
+									</select>
+								</center>
+								<br>
+							</div>
+							<div class="row" ng-show="tenant2.display">
+								<center>
+									Marks : <input type="text" placeholder="percentage" ng-model="tenant2.percentage"> in %<br><br>
+									<textarea class="form-control" placeholder="Remarks..." ng-model="tenant2.remarks"  rows="3" cols ="50" maxlength="500000">
+									</textarea>
+								</center>
+								<br>
+							</div>
+							<div class="row" ng-show="tenant3.display">
+								<center>
+									<select ng-model="tenant3.score">
+										<option ng-repeat="s in scores" value="{{s.score}}">{{s.score}}</option>
+									</select>
+								</center>
+								<br>
+							</div>
+							<div class="row radio" ng-show="tenant4.display">
+								<center>
+									<label>
+										<input type="radio" ng-model="tenant4.status" value="complete">
+									    Complete
+									</label><br/>
+									<label>
+									    <input type="radio" ng-model="tenant4.status" value="incomplete">
+									    Incomplete
+									</label><br/>
+								</center>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

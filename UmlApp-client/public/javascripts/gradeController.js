@@ -27,6 +27,7 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 	$scope.tenant3.display = false;
 	$scope.tenant4.display = false;
 
+	$scope.isRequestSent = false;
 	$scope.isDiagramGenerated = false;
 	$scope.grades = [
 		{grade : "A"},
@@ -72,6 +73,7 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 	$scope.generateDiagram = function() {
 
 			console.log('inside generateDiagram');
+			$scope.isRequestSent = true;
 			$http({
 		  		method: 'POST',
 		  		url: 'http://localhost:3001/generateDiagram'
@@ -79,11 +81,17 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 		    	// this callback will be called asynchronously
 		    	// when the response is available
 		  		console.log('response')
-		  		console.log(response.data);
+		  		//console.log(response.data);
 
-		  		$scope.isDiagramGenerated = true;
-		  		$scope.diagram = "http://localhost:3001/finalpic.png"
-
+		  		console.log('status ' + response.status);
+		  		console.log('filename ' + response.filename);
+		  		if(response.data.status === "200")
+		  		{
+		  			var filename = response.data.filename;
+		  			console.log(filename);
+		  			$scope.diagram = "http://localhost:3001/"+filename+""
+		  			console.log('$scope.diagram is  ' + $scope.diagram);
+		  		}
 				console.log('checking tenants');
 
 				console.log($scope.tenants);
@@ -129,6 +137,27 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 		  		console.log('error');
 		  		console.log(response);
 		  	});
+
+		  	move();
+
+		  	function move() {
+			  	var elem = document.getElementById("myBar");
+			  	var width = 10;
+			  	var id = setInterval(frame, 30);
+			  	function frame() {
+			   		if (width >= 100) {
+			   			$scope.isDiagramGenerated = true;
+			   			console.log("Diagram generated ? : " + $scope.isDiagramGenerated)
+			   			console.log("now ? : " + $scope.isDiagramGenerated)
+
+			      		clearInterval(id);
+			    	} else {
+			      		width++;
+			      		elem.style.width = width + '%';
+			      		elem.innerHTML = width * 1  + '%';
+			    	}
+			  	}
+			}
 	};
 
 	$scope.submit = function() {
@@ -180,5 +209,5 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 		{
 			$scope.isIncomplete = true;
 		}
-	};
+	}
 });

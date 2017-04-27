@@ -28,7 +28,7 @@ var express = require('express');
 
 
 var format = '';
-var currFileName = 'haha';
+var currFileName = '';
 // File Upload location and properties
 var storage = multer.diskStorage({
 				destination: function (req, file, cb) {
@@ -53,7 +53,7 @@ app.get('/',function(req,res){
 //For Storing uploaded file and sending response
 app.post('/uploadFile', function (req, res) {
 	if(req.body && req.body.javaCode) {
-		console.log(req.body.javaCode);
+		//console.log(req.body.javaCode);
 
 
 		var dirPath = "./extracted";
@@ -64,7 +64,7 @@ app.post('/uploadFile', function (req, res) {
     		response = {};
 
     		if(err) {
-        		console.log(err);
+        		//console.log(err);
         		response.status = '400';
 	    		response.message="Unable to save file (JAVACODE)";
     		}
@@ -95,8 +95,9 @@ app.post('/uploadFile', function (req, res) {
 
 		    	global.format = "zip";
 
-		    	console.log(req.file);
+		    	//console.log(req.file);
 			    global.currFileName = req.file.originalname;
+
 			    response.status = '200';
 			    response.message="File Uploaded successfully";
 			}
@@ -144,6 +145,7 @@ app.post('/generateDiagram',function(req,res){
 						{
 							console.log('PNG now accessible from public');
 							response = {};
+							response.filename = "finalpic.png"
 							response.status = '200';
 							response.message = 'diagram generated successfully from JAVACODE';
 							//console.log('Sending result');
@@ -165,22 +167,28 @@ app.post('/generateDiagram',function(req,res){
 		//console.log('dir' + dir);
 		var dirPath = "./extracted/"+dir+"";
 
-		var compileQuery = "java -jar umlparser.jar "+dirPath+" finalpic";
+		var compileQuery = "java -jar umlparser.jar "+dirPath + " "+dir+"";
+		console.log('compileQuery : ' + compileQuery);
 
 			exec(compileQuery, function(error, stdout, stderr) {
 				if(error)
 				{
+
 					console.log('error in JAVA command');
 					response = {};
 					response.status = '400';
-					response.message = 'Diagram NOT generated';
-					//console.log('Sending result');
+					response.message = 'Diagram NOT generated'; dir + '.png';
 					res.send(response);
 					res.end();
-				}
-				else
-				{
-					fs.rename('./finalpic.png','./public/finalpic.png',function(error){
+				}else{
+
+					var source = "./" + dir + '.png';
+					var destination = "./public/" + dir + '.png'
+					global.currFileName = dir + '.png';
+
+					console.log('source : ' + source);
+					console.log('destination : ' + destination);
+					fs.rename(source,destination,function(error){
 						if(error)
 						{
 
@@ -197,6 +205,8 @@ app.post('/generateDiagram',function(req,res){
 							console.log('PNG now accessible from public');
 							response = {};
 							response.status = '200';
+							response.filename = global.currFileName;
+
 							response.message = 'diagram generated successfully from ZIP file';
 							//console.log('Sending result');
 							res.send(response);
