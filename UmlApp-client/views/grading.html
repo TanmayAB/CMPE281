@@ -43,6 +43,12 @@
 			 <div class="alert alert-danger" ng-show="isIncomplete">
                 <strong>Upload a File </strong> or <strong>Paste JAVA code</strong> first.
              </div>
+             <div class="alert alert-danger" ng-show="isErrorInGeneratingDiagram">
+                <strong>Please Upload a File First</strong>
+             </div>
+			 <div class="alert alert-danger" ng-show="isInValidJavaCode">
+                <strong>Invalid JAVA Code. Please recheck the code.</strong>
+             </div>
 		</form>
 		<div class="row  top-buffer" margin-top="10em">
 				<center>
