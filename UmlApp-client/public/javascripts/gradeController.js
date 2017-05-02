@@ -1,4 +1,4 @@
-umlApp.controller('gradeController', function gradeController($scope, $rootScope, $location, $http,Upload) {
+umlApp.controller('gradeController', function gradeController( $interval,$scope, $rootScope, $location, $http,Upload) {
 
 
 	$scope.tenants = [
@@ -14,6 +14,9 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 	$scope.javaCode = '';
 	$scope.file = null;
 	$scope.diagram = null;
+
+	$scope.isSubmitted = false;
+
 
 
 	$scope.tenant1 = {};
@@ -33,6 +36,8 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 
 	$scope.isRequestSent = false;
 	$scope.isDiagramGenerated = false;
+
+
 	$scope.grades = [
 		{grade : "A"},
 		{grade : "B"},
@@ -48,23 +53,11 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 		{score : "5"}
 	];
 
-	function move() {
-			  	var elem = document.getElementById("myBar");
-			  	var width = 10;
-			  	var id = setInterval(frame, 30);
-			  	function frame() {
-			   		if (width >= 100) {
-			   			$scope.isDiagramGenerated = true;
 
-			      		clearInterval(id);
-			    	} else {
-			      		width++;
-			      		elem.style.width = width + '%';
-			      		elem.innerHTML = width * 1  + '%';
-			    	}
-			  	}
-			}
+	$scope.clearDiagram = function(){
 
+		$scope.isRequestSent = false;
+	}
 
 	$scope.display = function()
 	{
@@ -166,134 +159,179 @@ umlApp.controller('gradeController', function gradeController($scope, $rootScope
 					console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
 				});
 			}
+			$scope.file = null;
+			$scope.isSubmitted = true;
+
 		}
 		else
 		{
 			$scope.isIncomplete = true;
+			$scope.isSubmitted = false;
 		}
+		$scope.isDiagramGenerated = false;
+
 	}
 
 	$scope.generateDiagram = function() {
 
 		console.log('inside generateDiagram');
 
-  		if($scope.selectedTenant === "t001"){
+		if($scope.isSubmitted === true){
 
-  			$scope.tenant1.display = true;
-			$scope.tenant2.display = false;
-			$scope.tenant3.display = false;
-			$scope.tenant4.display = false;
+	  		if($scope.selectedTenant === "t001"){
 
-			$http({
-	  			method: 'POST',
-	  			url: 'http://localhost:3001/generateDiagram'
-			}).then(function successCallback(response) {
+	  			$scope.tenant1.display = true;
+				$scope.tenant2.display = false;
+				$scope.tenant3.display = false;
+				$scope.tenant4.display = false;
 
-		  		//console.log(response.data);
-		  		console.log(response.data.message);
-		  		console.log(response.data.status);
-		  		if(response.data.status === "200") {
-		  			var filename = response.data.filename;
-		  			console.log(filename);
-		  			$scope.diagram = "http://localhost:3001/"+filename+""
-		  			console.log('$scope.diagram is  ' + $scope.diagram);
-		  			$scope.isErrorInGeneratingDiagram = false;
+				$http({
+		  			method: 'POST',
+		  			url: 'http://localhost:3001/generateDiagram'
+				}).then(function successCallback(response) {
 
-		  		}
-		  		else if(response.data.status === "400")
-		  		{
-		  			$scope.isErrorInGeneratingDiagram = true;
-		  		}
+			  		//console.log(response.data);
+			  		//console.log(response.data.message);
+			  		//console.log(response.data.status);
+			  		if(response.data.status === "200") {
+			  			var filename = response.data.filename;
+			  			console.log(filename);
+			  			$scope.diagram = "http://localhost:3001/"+filename+""
+			  			console.log('$scope.diagram is  ' + $scope.diagram);
+			  			$scope.isErrorInGeneratingDiagram = false;
 
-				console.log('It\'s tenant 1');
-  			});
+			  		}
+			  		else if(response.data.status === "400")
+			  		{
+			  			$scope.isErrorInGeneratingDiagram = true;
+			  		}
 
-  		}
-  		else if($scope.selectedTenant === "t002"){
+					console.log('It\'s tenant 1');
+	  			});
 
-  			$scope.tenant1.display = false;
-			$scope.tenant2.display = true;
-			$scope.tenant3.display = false;
-			$scope.tenant4.display = false;
+	  		}
+	  		else if($scope.selectedTenant === "t002"){
 
-			$http({
-	  			method: 'POST',
-	  			url: 'http://localhost:3002/generateDiagram'
-			}).then(function successCallback(response) {
+	  			$scope.tenant1.display = false;
+				$scope.tenant2.display = true;
+				$scope.tenant3.display = false;
+				$scope.tenant4.display = false;
 
-		  		console.log('response')
-		  		//console.log(response.data);
+				$http({
+		  			method: 'POST',
+		  			url: 'http://localhost:3002/generateDiagram'
+				}).then(function successCallback(response) {
 
-		  		console.log('status ' + response.status);
-		  		console.log('filename ' + response.filename);
-		  		if(response.data.status === "200") {
-		  			var filename = response.data.filename;
-		  			console.log(filename);
-		  			$scope.diagram = "http://localhost:3002/"+filename+""
-		  			console.log('$scope.diagram is  ' + $scope.diagram);
-		  		}
+			  		console.log('response')
+			  		//console.log(response.data);
 
-				console.log('It\'s tenant 2');
-  			});
-  		}
-  		else if($scope.selectedTenant === "t003"){
+			  		console.log('status ' + response.status);
+			  		console.log('filename ' + response.filename);
+			  		if(response.data.status === "200") {
+			  			var filename = response.data.filename;
+			  			console.log(filename);
+			  			$scope.diagram = "http://localhost:3002/"+filename+""
+			  			console.log('$scope.diagram is  ' + $scope.diagram);
+			  			$scope.isErrorInGeneratingDiagram = false;
+			  		}
+			  		else if(response.data.status === "400")
+			  		{
+			  			$scope.isErrorInGeneratingDiagram = true;
+			  			$scope.isRequestSent = false;
 
-  			$scope.tenant1.display = false;
-			$scope.tenant2.display = false;
-			$scope.tenant3.display = true;
-			$scope.tenant4.display = false;
+			  		}
 
-			$http({
-	  			method: 'POST',
-	  			url: 'http://localhost:3003/generateDiagram'
-			}).then(function successCallback(response) {
+					console.log('It\'s tenant 2');
+	  			});
+	  		}
+	  		else if($scope.selectedTenant === "t003"){
 
-		  		console.log('response')
-		  		//console.log(response.data);
+	  			$scope.tenant1.display = false;
+				$scope.tenant2.display = false;
+				$scope.tenant3.display = true;
+				$scope.tenant4.display = false;
 
-		  		console.log('status ' + response.status);
-		  		console.log('filename ' + response.filename);
-		  		if(response.data.status === "200") {
-		  			var filename = response.data.filename;
-		  			console.log(filename);
-		  			$scope.diagram = "http://localhost:3003/"+filename+""
-		  			console.log('$scope.diagram is  ' + $scope.diagram);
-		  		}
+				$http({
+		  			method: 'POST',
+		  			url: 'http://localhost:3003/generateDiagram'
+				}).then(function successCallback(response) {
 
-				console.log('It\'s tenant 3');
-  			});
-  		}
-  		else if($scope.selectedTenant === "t004"){
+			  		console.log('response')
+			  		//console.log(response.data);
 
-  			$scope.tenant1.display = false;
-			$scope.tenant2.display = false;
-			$scope.tenant3.display = false;
-			$scope.tenant4.display = true;
+			  		console.log('status ' + response.status);
+			  		console.log('filename ' + response.filename);
+			  		if(response.data.status === "200") {
+			  			var filename = response.data.filename;
+			  			console.log(filename);
+			  			$scope.diagram = "http://localhost:3003/"+filename+""
+			  			console.log('$scope.diagram is  ' + $scope.diagram);
+			  			$scope.isErrorInGeneratingDiagram = false;
+			  		}
+			  		else if(response.data.status === "400")
+			  		{
+			  			$scope.isErrorInGeneratingDiagram = true;
+			  			$scope.isRequestSent = false;
 
-			$http({
-	  			method: 'POST',
-	  			url: 'http://localhost:3004/generateDiagram'
-			}).then(function successCallback(response) {
+			  		}
 
-		  		console.log('response')
-		  		//console.log(response.data);
+					console.log('It\'s tenant 3');
+	  			});
+	  		}
+	  		else if($scope.selectedTenant === "t004"){
 
-		  		console.log('status ' + response.data.status);
-		  		console.log('filename ' + response.filename);
-		  		if(response.data.status === "200") {
-		  			var filename = response.data.filename;
-		  			console.log(filename);
-		  			$scope.diagram = "http://localhost:3004/"+filename+""
-		  			console.log('$scope.diagram is  ' + $scope.diagram);
-		  		}else if(response.data.status === "400") {
-		  			console.log(response.data.message);
-		  			$scope.isInValidJavaCode = true;
-		  		}
+	  			$scope.tenant1.display = false;
+				$scope.tenant2.display = false;
+				$scope.tenant3.display = false;
+				$scope.tenant4.display = true;
 
-				console.log('It\'s tenant 4');
-  			});
-  		}
+				$http({
+		  			method: 'POST',
+		  			url: 'http://localhost:3004/generateDiagram'
+				}).then(function successCallback(response) {
 
-	  	move();
-	};
+			  		console.log('response')
+			  		//console.log(response.data);
+
+			  		console.log('status ' + response.data.status);
+			  		console.log('filename ' + response.filename);
+			  		if(response.data.status === "200") {
+			  			var filename = response.data.filename;
+			  			console.log(filename);
+			  			$scope.diagram = "http://localhost:3004/"+filename+""
+			  			console.log('$scope.diagram is  ' + $scope.diagram);
+			  		}else if(response.data.status === "400") {
+			  			console.log(response.data.message);
+			  			$scope.isInValidJavaCode = true;
+			  			$scope.isRequestSent = false;
+			  		}
+
+					console.log('It\'s tenant 4');
+	  			});
+	  		}
+	  		if($scope.isTenantSelected === true && $scope.isErrorInGeneratingDiagram != true){
+	  			$scope.isRequestSent = true;
+			  	var elem = document.getElementById("myBar");
+			  	var width = 10;
+			  	var id = $interval(function() {
+			   		if (width == 100) {
+			   			console.log($scope.isDiagramGenerated);
+			   			$scope.isDiagramGenerated = true;
+			   			console.log($scope.isDiagramGenerated);
+
+			   			$interval.cancel(id);
+			    	}	else {
+			      		width++;
+			      		elem.style.width = width + '%';
+			      		elem.innerHTML = width * 1  + '%';
+			    	}
+			  	}, 30);
+	  		}
+	  		else{
+	  			$scope.isDiagramGenerated = false;
+	  		}
+		}else{
+			$scope.isIncomplete = true;
+		}
+	}
 });

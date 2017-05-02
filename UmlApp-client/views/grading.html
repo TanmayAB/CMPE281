@@ -21,7 +21,7 @@
 		<form name="uploadForm" ng-submit="submit()" class="form-group">
 			<div class="row" ng-show="isZip">
 					<center>
-						<button type="button" class="btn" ngf-select ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select File</button>
+						<button type="button" class="btn" ngf-select ng-click=clearDiagram() ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select File</button>
 					</center>
 					<br>
 			</div>
@@ -59,10 +59,10 @@
 		<div class="col-md-8 col-md-offset-2" >
             <div class="panel panel-default">
                 <div class="panel-heading clearfix" ng-show="isRequestSent">
-                	<hr>
                 	<div id="myProgress">
   						<div id="myBar" >10%</div>
 					</div>
+
 					<div ng-show="isDiagramGenerated">
 						<div class="row top-buffer">
 							<center>
