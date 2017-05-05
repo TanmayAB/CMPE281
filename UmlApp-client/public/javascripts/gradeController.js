@@ -129,7 +129,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 				console.log('sending zip file');
 				console.log($scope.file);
 				$scope.upload = Upload.upload({
-					url: 'http://localhost:3001/uploadFile',
+					url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t1/uploadFile',
 					data: {
 						file: $scope.file,
 						diagramType : $scope.tenant1.diagramType
@@ -202,7 +202,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 
 				$http({
 		  			method: 'POST',
-		  			url: 'http://localhost:3001/generateDiagram'
+		  			url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t1/generateDiagram'
 				}).then(function successCallback(response) {
 
 			  		//console.log(response.data);
@@ -211,7 +211,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  		if(response.data.status === "200") {
 			  			var filename = response.data.filename;
 			  			console.log(filename);
-			  			$scope.diagram = "http://localhost:3001/"+filename+""
+			  			$scope.diagram = "http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t1/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
 			  			$scope.isInvalidFile = false;
 

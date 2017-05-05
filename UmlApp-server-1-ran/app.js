@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(cors());
 // Setting up directories
 app.use(express.static(path.join(__dirname, 'views')));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/t1',express.static(path.join(__dirname, 'public')));
 var express = require('express');
 
 
@@ -51,7 +51,7 @@ var upload = multer({ storage: storage });
 var uploadProfileImgs = upload.single('file');
 
 // For sending a index.html
-app.get('/',function(req,res){
+app.get('/t1',function(req,res){
 		response = {};
 		response.status = 200;
 		res.send(response);
