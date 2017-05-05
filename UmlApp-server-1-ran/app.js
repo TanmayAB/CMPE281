@@ -57,7 +57,7 @@ app.get('/',function(req,res){
 	});
 
 //For Storing uploaded file and sending response
-app.post('/uploadFile', function (req, res) {
+app.post('/t1/uploadFile', function (req, res) {
 
 	response = {};
   	uploadProfileImgs(req, res, function (err) {
@@ -87,7 +87,7 @@ app.post('/uploadFile', function (req, res) {
 });
 
 //For extracting zip and generating diagram
-app.post('/generateDiagram',function(req,res){
+app.post('/t1/generateDiagram',function(req,res){
 
 	if (global.isFileUploaded === true){
 
@@ -179,7 +179,7 @@ app.post('/generateDiagram',function(req,res){
 
 
 // Setting PORT
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 3000);
 
 // Setting up default error handler
 app.use(function (req, res, next) {
