@@ -10,6 +10,8 @@ var upload = multer();
 
 var isFileUploaded = false;
 
+const uuidV1 = require('uuid/v1');
+
 
 var cors = require('cors');
 // Filesystem, unzip and child process
@@ -107,10 +109,10 @@ app.post('/generateDiagram',function(req,res){
 				res.send(response);
 				res.end();
 			}else{
-
+				var fileName = uuidV1();
 				var source = "./" + dir;
-				var destination = "./public/" + dir + '.png'
-				global.currFileName = dir + '.png';
+				var destination = "./public/" + fileName + '.png'
+				global.currFileName = fileName + '.png';
 
 				console.log('source : ' + source);
 				console.log('destination : ' + destination);

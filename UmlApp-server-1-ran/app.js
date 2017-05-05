@@ -8,6 +8,9 @@ var path = require('path');
 var multer  = require('multer');
 var upload = multer();
 
+const uuidV1 = require('uuid/v1');
+
+
 var isFileUploaded = false;
 
 
@@ -16,6 +19,8 @@ var cors = require('cors');
 var fs = require('fs');
 var unzip = require('unzip');
 var exec = require('child_process').exec;
+
+var diagramType = '';
 
 //body parser for getting body of requests
 var bodyParser = require('body-parser');
@@ -67,6 +72,10 @@ app.post('/uploadFile', function (req, res) {
 	    	//console.log(req.file);
 		    global.currFileName = req.file.originalname;
 
+			console.log(req.body.diagramType)
+
+			global.diagramType = req.body.diagramType;
+
 		    response.status = '200';
 		    response.message="File Uploaded successfully";
 
@@ -92,7 +101,13 @@ app.post('/generateDiagram',function(req,res){
 		//console.log('dir' + dir);
 		var dirPath = "./extracted/"+dir+"";
 
-		var compileQuery = "java -jar umlparser.jar "+dirPath + " "+dir+"";
+		var compileQuery = ''
+
+		if(global.diagramType === "class"){
+			var compileQuery = "java -jar umlparser.jar "+dirPath + " "+dir+"";
+		}else if(global.diagramType === "sequence"){
+			var compileQuery = "java -jar umlsequenceparser.jar "+dirPath + " "+dir+"";
+		}
 		console.log('compileQuery : ' + compileQuery);
 
 		exec(compileQuery, function(error, stdout, stderr) {
@@ -107,13 +122,22 @@ app.post('/generateDiagram',function(req,res){
 				res.send(response);
 				res.end();
 			}else{
+				var fileName = uuidV1();
+				if(global.diagramType === "class"){
+					var source = "./" + dir + '.png';
+					var destination = "./public/" + fileName + '.png'
+					global.currFileName = fileName + '.png';
 
-				var source = "./" + dir + '.png';
-				var destination = "./public/" + dir + '.png'
-				global.currFileName = dir + '.png';
+					console.log('source : ' + source);
+					console.log('destination : ' + destination);
+				}else if (global.diagramType === "sequence"){
+					var source = "./UMLSequenceParser.png";
+					var destination = "./public/" + fileName + '.png'
+					global.currFileName = fileName + '.png';
 
-				console.log('source : ' + source);
-				console.log('destination : ' + destination);
+					console.log('source : ' + source);
+					console.log('destination : ' + destination);
+				}
 				fs.rename(source,destination,function(error){
 					if(error)
 					{
@@ -145,11 +169,11 @@ app.post('/generateDiagram',function(req,res){
 	}else
 	{
 		response = {};
-						response.status = '400';
-						response.message = 'Upload a File First please.';
-						console.log(response)
-						res.send(response);
-						res.end();
+		response.status = '400';
+		response.message = 'Upload a File First please.';
+		console.log(response)
+		res.send(response);
+		res.end();
 	}
 });
 

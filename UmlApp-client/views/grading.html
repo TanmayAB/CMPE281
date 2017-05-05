@@ -19,6 +19,19 @@
 
 	<div ng-show="isTenantSelected">
 		<form name="uploadForm" ng-submit="submit()" class="form-group">
+
+			<div class="row radio" ng-show="isTenant1">
+				<center>
+					<label>
+						<input type="radio" ng-model="tenant1.diagramType" value="class">
+					    Class Diagram
+					</label><br/>
+					<label>
+					    <input type="radio" ng-model="tenant1.diagramType" value="sequence">
+					    Sequence Diagram
+					</label><br/>
+				</center>
+			</div>
 			<div class="row" ng-show="isZip">
 					<center>
 						<button type="button" class="btn" ngf-select ng-click=clearDiagram() ng-model="file" name="file" ngf-accept="'.zip'" ngf-pattern="'.zip'" ngf-max-size="20MB">Select File</button>
@@ -43,7 +56,7 @@
 			 <div class="alert alert-danger" ng-show="isIncomplete">
                 <strong>Upload a File </strong> or <strong>Paste JAVA code</strong> first.
              </div>
-             <div class="alert alert-danger" ng-show="isErrorInGeneratingDiagram">
+             <div class="alert alert-danger" ng-show="isInvalidFile">
                 <strong>Please Upload a File First</strong>
              </div>
 			 <div class="alert alert-danger" ng-show="isInValidJavaCode">
@@ -105,7 +118,12 @@
 									    <input type="radio" ng-model="tenant4.status" value="incomplete">
 									    Incomplete
 									</label><br/>
+									<textarea class="form-control" placeholder="Remarks..." ng-model="tenant4.remarks"  rows="3" cols ="50" maxlength="500000">
+									</textarea>
 								</center>
+							</div>
+							<div class="row" ng-show="isDiagramGenerated">
+								<button ng-click="submitGrades()">Submit Grades</button>
 							</div>
 						</div>
 					</div>

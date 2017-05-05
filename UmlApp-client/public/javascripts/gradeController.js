@@ -18,12 +18,14 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 	$scope.isSubmitted = false;
 
 
+	$scope.isTenant1 = false;
 
 	$scope.tenant1 = {};
 	$scope.tenant2 = {};
 	$scope.tenant3 = {};
 	$scope.tenant4 = {};
 
+	$scope.tenant1.diagramType = '';
 	$scope.tenant1.display = false;
 	$scope.tenant2.display = false;
 	$scope.tenant3.display = false;
@@ -31,7 +33,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 	$scope.isInValidJavaCode = false;
 
 
-	$scope.isErrorInGeneratingDiagram = false;
+	$scope.isInvalidFile = false;
 
 
 	$scope.isRequestSent = false;
@@ -62,8 +64,17 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 	$scope.display = function()
 	{
 		console.log($scope.selectedTenant);
-		if($scope.selectedTenant === "t001" || $scope.selectedTenant === "t002" || $scope.selectedTenant === "t003")
+		if($scope.selectedTenant === "t001")
 		{
+			$scope.isTenant1 = true;
+			$scope.isZip = true;
+			$scope.isText = false;
+			$scope.isTenantSelected = true;
+
+		}
+		else if($scope.selectedTenant === "t001" || $scope.selectedTenant === "t002" || $scope.selectedTenant === "t003")
+		{
+			$scope.isTenant1 = false;
 			$scope.isZip = true;
 			$scope.isText = false;
 			$scope.isTenantSelected = true;
@@ -71,6 +82,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 		}
 		else if($scope.selectedTenant === "t004")
 		{
+			$scope.isTenant1 = false;
 			$scope.isZip = false;
 			$scope.isText = true;
 			$scope.isTenantSelected = true;
@@ -104,6 +116,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  	}, function errorCallback(response) {
 
 			  	});
+			  	$scope.javacode = '';
 			}
 
 		}
@@ -118,7 +131,8 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 				$scope.upload = Upload.upload({
 					url: 'http://localhost:3001/uploadFile',
 					data: {
-						file: $scope.file
+						file: $scope.file,
+						diagramType : $scope.tenant1.diagramType
 					}
 				}).then(function (resp) {
 				}, function (resp) {
@@ -177,7 +191,8 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 		console.log('inside generateDiagram');
 
 		if($scope.isSubmitted === true){
-
+			$scope.isRequestSent = true;
+			$scope.isSubmitted = false;
 	  		if($scope.selectedTenant === "t001"){
 
 	  			$scope.tenant1.display = true;
@@ -198,12 +213,12 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  			console.log(filename);
 			  			$scope.diagram = "http://localhost:3001/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
-			  			$scope.isErrorInGeneratingDiagram = false;
+			  			$scope.isInvalidFile = false;
 
 			  		}
 			  		else if(response.data.status === "400")
 			  		{
-			  			$scope.isErrorInGeneratingDiagram = true;
+			  			$scope.isInvalidFile = true;
 			  		}
 
 					console.log('It\'s tenant 1');
@@ -232,11 +247,11 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  			console.log(filename);
 			  			$scope.diagram = "http://localhost:3002/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
-			  			$scope.isErrorInGeneratingDiagram = false;
+			  			$scope.isInvalidFile = false;
 			  		}
 			  		else if(response.data.status === "400")
 			  		{
-			  			$scope.isErrorInGeneratingDiagram = true;
+			  			$scope.isInvalidFile = true;
 			  			$scope.isRequestSent = false;
 
 			  		}
@@ -266,11 +281,11 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  			console.log(filename);
 			  			$scope.diagram = "http://localhost:3003/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
-			  			$scope.isErrorInGeneratingDiagram = false;
+			  			$scope.isInvalidFile = false;
 			  		}
 			  		else if(response.data.status === "400")
 			  		{
-			  			$scope.isErrorInGeneratingDiagram = true;
+			  			$scope.isInvalidFile = true;
 			  			$scope.isRequestSent = false;
 
 			  		}
@@ -298,6 +313,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  		if(response.data.status === "200") {
 			  			var filename = response.data.filename;
 			  			console.log(filename);
+			  			$scope.isInValidJavaCode = false;
 			  			$scope.diagram = "http://localhost:3004/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
 			  		}else if(response.data.status === "400") {
@@ -309,8 +325,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 					console.log('It\'s tenant 4');
 	  			});
 	  		}
-	  		if($scope.isTenantSelected === true && $scope.isErrorInGeneratingDiagram != true){
-	  			$scope.isRequestSent = true;
+	  		if($scope.isInvalidFile == false && $scope.isInValidJavaCode == false){
 			  	var elem = document.getElementById("myBar");
 			  	var width = 10;
 			  	var id = $interval(function() {
@@ -325,13 +340,78 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			      		elem.style.width = width + '%';
 			      		elem.innerHTML = width * 1  + '%';
 			    	}
-			  	}, 30);
+			  	}, 50);
 	  		}
 	  		else{
 	  			$scope.isDiagramGenerated = false;
 	  		}
 		}else{
+
+			$scope.isRequestSent = false;
 			$scope.isIncomplete = true;
 		}
+	}
+
+	$scope.submitGrades = function() {
+
+		console.log('inside submitting grades')
+		if($scope.selectedTenant == "t001"){
+			$scope.tenant2.remarks ='' ;
+			$scope.tenant2.percentage ='';
+			$scope.tenant3.score = '';
+			$scope.tenant4.status = '';
+			$scope.tenant4.remarks ='' ;
+
+		}
+		else if($scope.selectedTenant == "t002"){
+
+			$scope.tenant1.grade = '';
+			$scope.tenant3.score = '';
+			$scope.tenant4.status = '';
+			$scope.tenant4.remarks ='' ;
+
+		}
+		else if($scope.selectedTenant == "t003"){
+
+			$scope.tenant1.grade = '';
+			$scope.tenant2.remarks ='' ;
+			$scope.tenant2.percentage ='';
+			$scope.tenant4.status = '';
+			$scope.tenant4.remarks ='' ;
+
+		}
+		else if($scope.selectedTenant == "t004"){
+			$scope.tenant1.grade = '';
+			$scope.tenant2.remarks ='' ;
+			$scope.tenant2.percentage ='';
+			$scope.tenant3.score = '';
+		}
+
+		console.log('Calling API OF SQL')
+
+		var data = {
+				tenant : $scope.selectedTenant,
+				grades : $scope.tenant1.grade,
+				remarks : $scope.tenant2.remarks,
+				percentage : $scope.tenant2.percentage,
+				score : $scope.tenant3.score,
+				status : $scope.tenant4.status,
+				remarks4 : $scope.tenant4.remarks
+			};
+			console.log(data);
+		$http({
+			method: 'POST',
+			url: 'http://localhost:3000/grade',
+			data : data
+		}).then(function successCallback(response) {
+			$scope.tenant1.grade = '';
+			$scope.tenant2.remarks ='' ;
+			$scope.tenant2.percentage ='';
+			$scope.tenant3.score = '';
+			$scope.tenant4.status = '';
+			$scope.tenant4.remarks ='' ;
+
+			console.log(response);
+		});
 	}
 });
