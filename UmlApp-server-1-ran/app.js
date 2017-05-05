@@ -52,7 +52,9 @@ var uploadProfileImgs = upload.single('file');
 
 // For sending a index.html
 app.get('/',function(req,res){
-		res.render('index');
+		response = {};
+		response.status = 200;
+		res.send(response);
 		res.end();
 	});
 
