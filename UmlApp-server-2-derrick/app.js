@@ -158,7 +158,7 @@ app.post('/generateDiagram',function(req,res){
 
 
 // Setting PORT
-app.set('port', process.env.PORT || 3002);
+app.set('port', process.env.PORT || 3000);
 
 // Setting up default error handler
 app.use(function (req, res, next) {
