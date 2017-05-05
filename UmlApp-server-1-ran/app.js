@@ -31,7 +31,6 @@ app.use(cors());
 // Setting up directories
 app.use(express.static(path.join(__dirname, 'views')));
 app.use('/t1',express.static(path.join(__dirname, 'public')));
-var express = require('express');
 
 
 var currFileName = '';
@@ -94,14 +93,14 @@ app.post('/t1/generateDiagram',function(req,res){
 	if (global.isFileUploaded === true){
 
 		var filePath = __dirname + '/uploads/' + global.currFileName;
-		fs.createReadStream(filePath).pipe(unzip.Extract({ path: './extracted' }));
+		fs.createReadStream(filePath).pipe(unzip.Extract({ path: __dirname + '/extracted' }));
 		//console.log('file in generate diagram : ');
 	    //console.log(global.currFileName);
 
 		var arr = global.currFileName.split(".");
 		var dir = arr[0];
 		//console.log('dir' + dir);
-		var dirPath = "./extracted/"+dir+"";
+		var dirPath = __dirname + "/extracted/"+dir+"";
 
 		var compileQuery = ''
 
