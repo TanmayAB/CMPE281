@@ -135,7 +135,9 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 						diagramType : $scope.tenant1.diagramType
 					}
 				}).then(function (resp) {
+					console.log(resp);
 				}, function (resp) {
+					console.log(resp);
 				}, function (evt) {
 					var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
 					console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
