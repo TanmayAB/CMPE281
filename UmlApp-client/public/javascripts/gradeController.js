@@ -1,5 +1,6 @@
 umlApp.controller('gradeController', function gradeController( $interval,$scope, $rootScope, $location, $http,Upload) {
 
+	$scope.url = "http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000"
 
 	$scope.tenants = [
 		{tenant : "t001"},
@@ -109,7 +110,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 				console.log($scope.javaCode);
 				$http({
 			  		method: 'POST',
-			  		url: 'http://localhost:3004/uploadFile',
+			  		url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t4/uploadFile',
 			  		data: {javaCode : $scope.javaCode}
 				}).then(function successCallback(response) {
 
@@ -117,6 +118,8 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 
 			  	});
 			  	$scope.javacode = '';
+			  	$scope.isSubmitted = true;
+
 			}
 
 		}
@@ -148,7 +151,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 				console.log('sending zip file');
 				console.log($scope.file);
 				$scope.upload = Upload.upload({
-					url: 'http://localhost:3002/uploadFile',
+					url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t2/uploadFile',
 					data: {
 						file: $scope.file
 					}
@@ -164,7 +167,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 				console.log('sending zip file');
 				console.log($scope.file);
 				$scope.upload = Upload.upload({
-					url: 'http://localhost:3003/uploadFile',
+					url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t3/uploadFile',
 					data: {
 						file: $scope.file
 					}
@@ -177,6 +180,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			}
 			$scope.file = null;
 			$scope.isSubmitted = true;
+			$scope.message = "File Uploaded Successfully..!!";
 
 		}
 		else
@@ -193,8 +197,13 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 		console.log('inside generateDiagram');
 
 		if($scope.isSubmitted === true){
+
+			$scope.message = "";
 			$scope.isRequestSent = true;
 			$scope.isSubmitted = false;
+
+			console.log('checking tenant')
+			console.log($scope.selectedTenant)
 	  		if($scope.selectedTenant === "t001"){
 
 	  			$scope.tenant1.display = true;
@@ -202,6 +211,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 				$scope.tenant3.display = false;
 				$scope.tenant4.display = false;
 
+				console.log('tenant is t1');
 				$http({
 		  			method: 'POST',
 		  			url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t1/generateDiagram'
@@ -236,7 +246,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 
 				$http({
 		  			method: 'POST',
-		  			url: 'http://localhost:3002/generateDiagram'
+		  			url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t2/generateDiagram'
 				}).then(function successCallback(response) {
 
 			  		console.log('response')
@@ -247,7 +257,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  		if(response.data.status === "200") {
 			  			var filename = response.data.filename;
 			  			console.log(filename);
-			  			$scope.diagram = "http://localhost:3002/"+filename+""
+			  			$scope.diagram = "http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t2/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
 			  			$scope.isInvalidFile = false;
 			  		}
@@ -270,7 +280,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 
 				$http({
 		  			method: 'POST',
-		  			url: 'http://localhost:3003/generateDiagram'
+		  			url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t3/generateDiagram'
 				}).then(function successCallback(response) {
 
 			  		console.log('response')
@@ -281,7 +291,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  		if(response.data.status === "200") {
 			  			var filename = response.data.filename;
 			  			console.log(filename);
-			  			$scope.diagram = "http://localhost:3003/"+filename+""
+			  			$scope.diagram = "http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t3/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
 			  			$scope.isInvalidFile = false;
 			  		}
@@ -297,14 +307,15 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 	  		}
 	  		else if($scope.selectedTenant === "t004"){
 
+	  			console.log('inside 4th tenant')
+
 	  			$scope.tenant1.display = false;
 				$scope.tenant2.display = false;
 				$scope.tenant3.display = false;
 				$scope.tenant4.display = true;
-
 				$http({
 		  			method: 'POST',
-		  			url: 'http://localhost:3004/generateDiagram'
+		  			url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t4/generateDiagram'
 				}).then(function successCallback(response) {
 
 			  		console.log('response')
@@ -316,7 +327,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			  			var filename = response.data.filename;
 			  			console.log(filename);
 			  			$scope.isInValidJavaCode = false;
-			  			$scope.diagram = "http://localhost:3004/"+filename+""
+			  			$scope.diagram = "http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t4/"+filename+""
 			  			console.log('$scope.diagram is  ' + $scope.diagram);
 			  		}else if(response.data.status === "400") {
 			  			console.log(response.data.message);
@@ -390,6 +401,8 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 		}
 
 		console.log('Calling API OF SQL')
+
+		console.log(data);
 
 		var data = {
 				tenant : $scope.selectedTenant,
