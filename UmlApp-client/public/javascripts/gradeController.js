@@ -64,6 +64,8 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 
 	$scope.display = function()
 	{
+		$scope.finalmessage = ""
+		$scope.isRequestSent = false;
 		console.log($scope.selectedTenant);
 		if($scope.selectedTenant === "t001")
 		{
@@ -428,7 +430,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			$scope.tenant3.score = '';
 			$scope.tenant4.status = '';
 			$scope.tenant4.remarks ='' ;
-
+			$scope.finalmessage = "Assessment Saved successfully"
 			console.log(response);
 		});
 	}
