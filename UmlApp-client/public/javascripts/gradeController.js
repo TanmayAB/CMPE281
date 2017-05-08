@@ -275,7 +275,6 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 
 	  			$scope.tenant1.display = false;
 				$scope.tenant2.display = false;
-				$scope.tenant3.display = true;
 				$scope.tenant4.display = false;
 
 				$http({
@@ -312,7 +311,7 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 	  			$scope.tenant1.display = false;
 				$scope.tenant2.display = false;
 				$scope.tenant3.display = false;
-				$scope.tenant4.display = true;
+				$scope.tenant4.display = false;
 				$http({
 		  			method: 'POST',
 		  			url: 'http://LoadBalancerforUMLParser-1408717123.us-west-2.elb.amazonaws.com:3000/t4/generateDiagram'
@@ -347,6 +346,10 @@ umlApp.controller('gradeController', function gradeController( $interval,$scope,
 			   			$scope.isDiagramGenerated = true;
 			   			console.log($scope.isDiagramGenerated);
 
+			   			if($scope.selectedTenant === "t003")
+			   				$scope.tenant3.display = true;
+			   			if($scope.selectedTenant === "t004")
+			   				$scope.tenant3.display = true;
 			   			$interval.cancel(id);
 			    	}	else {
 			      		width++;

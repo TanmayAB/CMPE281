@@ -23,11 +23,11 @@
 			<div class="row radio" ng-show="isTenant1">
 				<center>
 					<label>
-						<input type="radio" ng-model="tenant1.diagramType" value="class">
+						<input type="radio" name="radio" ng-model="tenant1.diagramType" value="class">
 					    Class Diagram
-					</label><br/>
+					</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label>
-					    <input type="radio" ng-model="tenant1.diagramType" value="sequence">
+					    <input type="radio" name="radio" ng-model="tenant1.diagramType" value="sequence">
 					    Sequence Diagram
 					</label><br/>
 				</center>
@@ -43,19 +43,21 @@
 			</div>
 
 			<div class="row top-buffer" ng-show="isText">
-				<br>
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<br>
 					<center>
 						<textarea class="form-control" placeholder="Past JAVA code here..." ng-model="javaCode"  rows="10" cols ="70" maxlength="500000">
 						</textarea>
 					</center>
 					<br>
+				</div>
 			</div>
 
 			<div class="row">
 					<center>
 						<button type="submit">Submit</button>
 					</center>
-					<br>
 			</div>
 			 <div class="alert alert-danger" ng-show="isIncomplete">
                 <strong>Upload a File </strong> or <strong>Paste JAVA code</strong> first.
@@ -67,15 +69,15 @@
                 <strong>Invalid JAVA Code. Please recheck the code.</strong>
              </div>
 		</form>
-		<div class="row  top-buffer" margin-top="10em">
+		<div class="row" margin-top="10em">
 				<center>
 					<input type="button" ng-click="generateDiagram()" value="Generate Class Diagram" class="btn btn-primary"/>
 				</center>
-				<br>
 		</div>
-		<div class="col-md-8 col-md-offset-2" >
-            <div class="panel panel-default">
+		<div class="col-md-12" >
                 <div class="panel-heading clearfix" ng-show="isRequestSent">
+                	<div class="panel panel-default">
+
                 	<div id="myProgress">
                 		<label class="label">Progress :</label><br>
   						<div id="myBar" >10%</div>
@@ -91,6 +93,7 @@
 						<div class="form-group">
 							<div class="row" ng-show="tenant1.display">
 								<center>
+									<label>Grade : </label>
 									<select ng-model="tenant1.grade">
 										<option ng-repeat="g in grades" value="{{g.grade}}">{{g.grade}}</option>
 									</select>
@@ -98,15 +101,25 @@
 								<br>
 							</div>
 							<div class="row" ng-show="tenant2.display">
-								<center>
-									Marks : <input type="text" placeholder="percentage" ng-model="tenant2.percentage"> in %<br><br>
-									<textarea class="form-control" placeholder="Remarks..." ng-model="tenant2.remarks"  rows="3" cols ="10" maxlength="500000">
-									</textarea>
-								</center>
+
+								<div class="row">
+									<center>
+										Marks : <input type="text" placeholder="percentage" ng-model="tenant2.percentage"> in %<br><br>
+									</center>
+								</div>
+								<div class="row text-center">
+										<div class="col-md-3"></div>
+										<div class="col-md-6">
+										<textarea class="form-control" placeholder="Remarks..." ng-model="tenant2.remarks"  rows="3" maxlength="500000"></textarea>
+										</div>
+										<div class="col-md-3"></div>
+								</div>
+								</div></div>
 								<br>
 							</div>
 							<div class="row" ng-show="tenant3.display">
 								<center>
+									<label>Score : </label>
 									<select ng-model="tenant3.score">
 										<option ng-repeat="s in scores" value="{{s.score}}">{{s.score}}</option>
 									</select>
@@ -118,18 +131,23 @@
 									<label>
 										<input type="radio" ng-model="tenant4.status" value="complete">
 									    Complete
-									</label><br/>
+									</label>
 									<label>
 									    <input type="radio" ng-model="tenant4.status" value="incomplete">
 									    Incomplete
 									</label><br/>
-									<textarea class="form-control" placeholder="Remarks..." ng-model="tenant4.remarks"  rows="3" cols ="50" maxlength="500000">
-									</textarea>
+									<div class="row text-center">
+										<div class="col-md-3"></div>
+										<div class="col-md-6">
+											<textarea class="form-control" placeholder="Remarks..." ng-model="tenant4.remarks"  rows="3" cols ="50" maxlength="500000"></textarea>
+										</div>
 								</center>
 							</div>
 							<div class="row" ng-show="isDiagramGenerated">
 								<center>
-								<button class="btn" ng-click="submitGrades()">Submit Grades</button>
+								<button class="btn-primary" ng-click="submitGrades()">Submit Assessment</button>
+								<br>
+								<br>
 								</center>
 							</div>
 						</div>
